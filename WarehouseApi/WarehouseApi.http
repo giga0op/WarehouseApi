@@ -1,0 +1,94 @@
+@host = https://localhost:7297
+
+### 1. ახალი პროდუქტი: ფილა, 0 მარაგით
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "name": "ფილა ქართული",
+  "category": "ფილა",
+  "variant": "თეთრი 60x60",
+  "unit": "კვ.მ",
+  "price": 25,
+  "quantity": 10
+}
+
+### 2. ახალი პროდუქტი: პეტლი
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "name": "პეტლი",
+  "category": "ფურნიტურა",
+  "variant": "ბრინჯაო 90°",
+  "unit": "ცალი",
+  "price": 3,
+  "quantity": 10
+}
+
+### 3. პროდუქტების სია
+GET {{host}}/api/products
+
+### 4. მარაგის მიღება: ფილა, 50 კვ.მ
+POST {{host}}/api/products/3/restock
+Content-Type: application/json
+
+{
+  "quantity": 40,
+  "inPacks": false
+}
+
+### 5. მარაგის მიღება: პეტლი, 2 შეფუთვა (= 20 ცალი)
+POST {{host}}/api/products/4/restock
+Content-Type: application/json
+
+{
+  "quantity": 20,
+  "inPacks": true
+}
+
+### 6. გაყიდვა: ფილა 2.5 კვ.მ
+POST {{host}}/api/sales
+Content-Type: application/json
+
+{
+  "productId": 3,
+  "quantity": 5,
+  "inPacks": false
+}
+
+### 7. გაყიდვა: პეტლი 5 ცალი
+POST {{host}}/api/sales
+Content-Type: application/json
+
+{
+  "productId": 4,
+  "quantity": 1,
+  "inPacks": false
+}
+
+### 8. გაყიდვა: პეტლი 1 შეფუთვა (= 10 ცალი)
+POST {{host}}/api/sales
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "quantity": 1,
+  "inPacks": true
+}
+
+### 9. შეცდომის ტესტი: მარაგზე მეტი (უნდა დააბრუნოს 400)
+POST {{host}}/api/sales
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "quantity": 100,
+  "inPacks": false
+}
+
+### 10. რეპორტი: ნოემბერი
+GET {{host}}/api/reports/sales?from=2026-11-01&to=2026-11-30
+
+### 11. რეპორტი: დღეს
+GET {{host}}/api/reports/sales?from=2026-11-07&to=2026-11-07
