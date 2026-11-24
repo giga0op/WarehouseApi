@@ -10,3 +10,7 @@ public record CreateProductRequest(
 
 // Quantity: რამდენი მოვიდა; NewPrice: ახალი ფასი ერთეულზე (არასავალდებულო)
 public record RestockRequest(decimal Quantity, decimal? NewPrice = null);
+
+public record UpdateProductRequest(
+    string Name, string Category, string Variant,
+    string Unit, decimal Price, decimal Quantity);

@@ -10,6 +10,7 @@ public interface IProductService
     Task<ProductDto> GetAsync(int id);
     Task<ProductDto> CreateAsync(CreateProductRequest req);
     Task<ProductDto> RestockAsync(int id, RestockRequest req);
+    Task<ProductDto> UpdateAsync(int id, UpdateProductRequest req);
 }
 
 public class ProductService : IProductService
@@ -69,4 +70,27 @@ public class ProductService : IProductService
 
     private static ProductDto ToDto(Product p) =>
         new(p.Id, p.Name, p.Category, p.Variant, p.Unit, p.Price, p.Quantity);
+    public async Task<ProductDto> UpdateAsync(int id, UpdateProductRequest req)
+    {
+        if (string.IsNullOrWhiteSpace(req.Name))
+            throw new BusinessRuleException("სახელი სავალდებულოა");
+        if (req.Price < 0 || req.Quantity < 0)
+            throw new BusinessRuleException("ფასი და რაოდენობა არ შეიძლება იყოს უარყოფითი");
+
+        var product = await GetOrThrowAsync(id);
+
+        product.Name = req.Name.Trim();
+        product.Category = req.Category.Trim();
+        product.Variant = req.Variant.Trim();
+        product.Unit = string.IsNullOrWhiteSpace(req.Unit) ? "ცალი" : req.Unit.Trim();
+        product.Price = req.Price;
+        product.Quantity = req.Quantity;
+
+        // თუ ასეთი სახელი+ვარიანტი უკვე არსებობს, ბაზა დააბრუნებს შეცდომას (409)
+        await _products.SaveChangesAsync();
+        return ToDto(product);
+    }
 }
+
+
+

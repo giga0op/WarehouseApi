@@ -1,4 +1,4 @@
-@host = https://localhost:7297
+@host = https://localhost:44382
 
 ### 1. ახალი პროდუქტი: ფილა, 0 მარაგით
 POST {{host}}/api/products
@@ -92,3 +92,15 @@ GET {{host}}/api/reports/sales?from=2026-11-01&to=2026-11-30
 
 ### 11. რეპორტი: დღეს
 GET {{host}}/api/reports/sales?from=2026-11-07&to=2026-11-07
+
+PUT {{host}}/api/products/1
+Content-Type: application/json
+
+{
+  "name": "ფილა",
+  "category": "ფილა",
+  "variant": "თეთრი 60x60",
+  "unit": "კვ.მ",
+  "price": 25,
+  "quantity": 50
+}

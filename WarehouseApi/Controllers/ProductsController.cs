@@ -27,4 +27,8 @@ public class ProductsController : ControllerBase
     [HttpPost("{id}/restock")]
     public async Task<ProductDto> Restock(int id, RestockRequest req) =>
         await _products.RestockAsync(id, req);
+
+    [HttpPut("{id}")]
+    public async Task<ProductDto> Update(int id, UpdateProductRequest req) =>
+    await _products.UpdateAsync(id, req);
 }
